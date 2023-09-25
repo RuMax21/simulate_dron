@@ -8,7 +8,7 @@ pygame.init()
 map_width = 1280
 map_height = 720
 
-SPEED = random.randint(1, 10)
+SPEED = random.randint(1, 5)
 
 canvas = pygame.Surface((map_width, map_height))
 # canvas.set
@@ -23,7 +23,7 @@ cam_2.fill((0, 0, 0))
 # Создание окна для отрисовки
 window = pygame.display.set_mode((map_width, map_height))
 
-bg_img = pygame.image.load('img/map1.PNG')
+bg_img = pygame.image.load('img/map2.PNG')
 bg_img = pygame.transform.scale(bg_img, (cam_1.get_width(), cam_1.get_height()))
 bg_img_copy = bg_img.copy()
 
@@ -69,9 +69,9 @@ def draw_vector(start_point, end_point):
 # draw_vector(start_point=(50, 50), end_point=(100, 500))
 
 def show_cam(x, y):
-    piece_rect.x = x
-    piece_rect.y = y
-    cam_2.blit(bg_img_copy, (cam_2.get_width() // 1 / 4, 100), piece_rect)
+    piece_rect.x = (x - UAV_image.get_width() // 2) - UAV_image.get_width() // 2 
+    piece_rect.y = (y - UAV_image.get_height() // 2) - UAV_image.get_height() // 2
+    cam_2.blit(bg_img_copy, (cam_2.get_width() // 1 / 4, 400), piece_rect)
 
 
 
@@ -85,8 +85,8 @@ def draw_airplane(x, y):
     window.blit(UAV_image, (x - UAV_image.get_width() // 2, y - UAV_image.get_height() // 2), )
     # window.blit(UAV_image, ( random.randint(50, 300), random.randint(50, 300)), )
 
-
-
+def change_map():
+    bg_img = pygame.image.load('img/map2.PNG')
 
 # Основной цикл программы
 running = True
@@ -99,15 +99,29 @@ while running:
     # Получение текущего состояния клавиш
     keys = pygame.key.get_pressed()
 
-    n = random.randint(0, 3)
-    if n == 0 and airplane_x > 0:
-        airplane_x -= SPEED
-    if n == 1 and airplane_x < cam_1.get_width() - UAV_width:
-        airplane_x += SPEED
-    if n == 2 and airplane_y > 0:
-        airplane_y -= SPEED
-    if n == 3 and airplane_y < cam_1.get_height() - UAV_height:
-        airplane_y += SPEED
+    # n = random.randint(0, 100)
+    # if n < 25 and airplane_x > 0:
+    #     airplane_x -= SPEED
+    # if n >= 25 and n < 50 and airplane_x < cam_1.get_width() - UAV_width:
+    #     airplane_x += SPEED
+    # if n >= 50 and n < 75 and airplane_y > 0:
+    #     airplane_y -= SPEED
+    # if n >= 75 and airplane_y < cam_1.get_height() - UAV_height:
+    #     airplane_y += SPEED
+    if keys[pygame.K_LEFT] and airplane_x > 0:
+        airplane_x -= 5
+    if keys[pygame.K_RIGHT] and airplane_x < cam_1.get_width() - UAV_width // 2:
+        airplane_x += 5
+    if keys[pygame.K_UP] and airplane_y > 0:
+        airplane_y -= 5
+    if keys[pygame.K_DOWN] and airplane_y < cam_1.get_height():
+        airplane_y += 5
+    if keys[pygame.K_SPACE] and airplane_y < cam_1.get_height():
+        draw_vector((start_x, start_y), (airplane_x, airplane_y))
+    if keys[pygame.K_n]:
+        change_map()
+    if keys[pygame.K_ESCAPE]:
+        running = False
 
     # Очистка экрана
 
@@ -121,6 +135,8 @@ while running:
     # Отрисовка самолета
     draw_airplane(airplane_x, airplane_y)
     show_cam(airplane_x, airplane_y)
+
+
 
     show_info(airplane_x, airplane_y)
     show_start_coordinate(start_x, start_y)
