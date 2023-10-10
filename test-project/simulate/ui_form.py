@@ -31,10 +31,7 @@ class Ui_MainWindow(object):
 "#camera{\n"
 "	background-color: gray;\n"
 "}\n"
-"\n"
-"#dron{\n"
-"	background-color: blue;\n"
-"}")
+"")
         self.action_background = QAction(MainWindow)
         self.action_background.setObjectName(u"action_background")
         self.action_exit = QAction(MainWindow)
@@ -53,7 +50,7 @@ class Ui_MainWindow(object):
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QMenuBar(MainWindow)
         self.menubar.setObjectName(u"menubar")
-        self.menubar.setGeometry(QRect(0, 0, 1280, 22))
+        self.menubar.setGeometry(QRect(0, 0, 1280, 23))
         self.menuFile = QMenu(self.menubar)
         self.menuFile.setObjectName(u"menuFile")
         MainWindow.setMenuBar(self.menubar)
