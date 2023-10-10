@@ -4,7 +4,7 @@ import sys
 from PySide6.QtWidgets import QApplication, QMainWindow, QFileDialog, QLabel, QWidget
 from PySide6.QtGui import QPixmap, QPaintEvent
 from PySide6.QtCore import Qt, QEvent, QTimer, QPoint
-import random
+from random import randint
 
 # Important:
 # You need to run the following command to generate the ui_form.py file
@@ -17,10 +17,17 @@ class MainWindow(QMainWindow):
         super().__init__(parent)
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
+
+        self.position_x = randint(self.ui.dron.width(), self.ui.map.width() - self.ui.dron.width())
+        self.position_y = randint(self.ui.dron.height(), self.ui.map.height() - self.ui.dron.height())
+
+        #show ui-elements
         self.init_UI()
+        self.spawn_objects(self.position_x, self.position_y)
 
         #Values
         self.speed = 2
+
         #bool values for moving
         self.move_up = False
         self.move_down = False
@@ -30,18 +37,31 @@ class MainWindow(QMainWindow):
         #menubar actions
         self.ui.action_background.triggered.connect(self.change_background)
         self.ui.action_exit.triggered.connect(self.close)
+        #spinbox signal-slot
+        self.ui.speed_limiter.valueChanged.connect(self.get_speed)
 
+        self.frame_update()
+
+    def init_UI(self):
+        #map image
+        self.ui.map.setPixmap(QPixmap('../images/background.png'))
+        #dron image and him scaled
+        self.ui.dron.setScaledContents(True)
+        self.ui.dron.setPixmap(QPixmap('../images/image_dron.png'))
+
+    def spawn_objects(self, position_x, position_y):
+
+        self.ui.dron.move(position_x + (0.5 * self.ui.dron.width()), position_y + (0.5 * self.ui.dron.height()))
+        self.ui.radius_connection.move(self.ui.dron.pos().x() - (0.25 * self.ui.radius_connection.width() ), self.ui.dron.pos().y() - (0.25 * self.ui.radius_connection.height()))
+
+    def frame_update(self):
         #display update
         self.timer = QTimer(self)
         self.timer.timeout.connect(self.update_game)
         self.timer.start(10)
 
-    def init_UI(self):
-        #start image
-        self.ui.map.setPixmap(QPixmap('../images/background.png'))
-
-        self.ui.dron.setScaledContents(True)
-        self.ui.dron.setPixmap(QPixmap('../images/image_dron.png'))
+    def get_speed(self):
+        self.speed = self.ui.speed_limiter.value()
 
     def change_background(self):
         options = QFileDialog.Options()
@@ -84,6 +104,7 @@ class MainWindow(QMainWindow):
         if self.move_right:
             self.ui.dron.move(self.ui.dron.pos() + QPoint(self.speed, 0))
 
+        #camera's replay
         self.ui.camera.setPixmap(self.ui.map.pixmap().copy(int(self.ui.dron.pos().x()), int(self.ui.dron.pos().y()), 200, 200))
 
 
