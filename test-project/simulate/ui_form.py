@@ -3,7 +3,7 @@
 ################################################################################
 ## Form generated from reading UI file 'form.ui'
 ##
-## Created by: Qt User Interface Compiler version 6.5.3
+## Created by: Qt User Interface Compiler version 6.6.0
 ##
 ## WARNING! All changes made in this file will be lost when recompiling UI file!
 ################################################################################
@@ -45,7 +45,7 @@ class Ui_MainWindow(object):
         self.centralwidget.setObjectName(u"centralwidget")
         self.map = QLabel(self.centralwidget)
         self.map.setObjectName(u"map")
-        self.map.setGeometry(QRect(35, 25, 850, 650))
+        self.map.setGeometry(QRect(0, 0, 850, 650))
         self.camera = QLabel(self.centralwidget)
         self.camera.setObjectName(u"camera")
         self.camera.setGeometry(QRect(1000, 25, 200, 200))
@@ -100,6 +100,7 @@ class Ui_MainWindow(object):
         self.verticalLayout_3.setContentsMargins(0, 0, 0, 0)
         self.error = QLabel(self.layoutWidget2)
         self.error.setObjectName(u"error")
+        self.error.setEnabled(False)
 
         self.verticalLayout_3.addWidget(self.error)
 

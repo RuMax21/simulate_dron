@@ -1,10 +1,10 @@
 # This Python file uses the following encoding: utf-8
 import sys
+from random import randint
 
 from PySide6.QtWidgets import QApplication, QMainWindow, QFileDialog, QLabel, QWidget
 from PySide6.QtGui import QPixmap, QPaintEvent
 from PySide6.QtCore import Qt, QEvent, QTimer, QPoint
-from random import randint
 
 # Important:
 # You need to run the following command to generate the ui_form.py file
@@ -18,8 +18,11 @@ class MainWindow(QMainWindow):
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
 
-        self.position_x = randint(self.ui.dron.width(), self.ui.map.width() - self.ui.dron.width())
-        self.position_y = randint(self.ui.dron.height(), self.ui.map.height() - self.ui.dron.height())
+#        self.position_x = randint(self.ui.dron.width(), self.ui.map.width() - self.ui.dron.width())
+#        self.position_y = randint(self.ui.dron.height(), self.ui.map.height() - self.ui.dron.height())
+
+        self.position_x = 100
+        self.position_y = 100
 
         #show ui-elements
         self.init_UI()
@@ -40,8 +43,6 @@ class MainWindow(QMainWindow):
         #spinbox signal-slot
         self.ui.speed_limiter.valueChanged.connect(self.get_speed)
 
-        self.dron_in_zone_connection()
-
         self.frame_update()
 
     def init_UI(self):
@@ -52,9 +53,13 @@ class MainWindow(QMainWindow):
         self.ui.dron.setPixmap(QPixmap('../images/image_dron.png'))
 
     def spawn_objects(self, position_x, position_y):
-
-        self.ui.dron.move(position_x + (0.5 * self.ui.dron.width()), position_y + (0.5 * self.ui.dron.height()))
-        self.ui.radius_connection.move(self.ui.dron.pos().x() - (0.25 * self.ui.radius_connection.width() ), self.ui.dron.pos().y() - (0.25 * self.ui.radius_connection.height()))
+        self.ui.dron.move(position_x - (0.5 * self.ui.dron.width()), position_y - (0.5 * self.ui.dron.height()))
+#        self.ui.radius_connection.move(self.ui.dron.pos().x(), self.ui.dron.pos().y())
+        print(position_x, position_y, self.ui.dron.pos().x(), self.ui.dron.pos().y())
+        self.ui.radius_connection.move(position_x - (0.5 * self.ui.radius_connection.width()), position_y - (0.5 * self.ui.radius_connection.height()))
+        print(self.ui.radius_connection.pos().x(), self.ui.radius_connection.pos().y())
+#        self.ui.dron.move(position_x, position_y)
+#        self.ui.radius_connection.move(self.ui.dron.pos().x() - (0.25 * self.ui.radius_connection.width() ), self.ui.dron.pos().y() - (0.25 * self.ui.radius_connection.height()))
 
     def frame_update(self):
         #display update
@@ -108,6 +113,8 @@ class MainWindow(QMainWindow):
 
         #camera's replay
         self.ui.camera.setPixmap(self.ui.map.pixmap().copy(int(self.ui.dron.pos().x()), int(self.ui.dron.pos().y()), 200, 200))
+        self.dron_in_zone_connection()
+
 
 
     def dron_in_zone_connection(self):
@@ -121,9 +128,10 @@ class MainWindow(QMainWindow):
         end_connect_position_y = start_connect_position_y + self.ui.radius_connection.width()
 
         if start_connect_position_x <= position_x <= end_connect_position_x and start_connect_position_y <= position_y <= end_connect_position_y:
-            self.ui.error.setText('Connection')
+            self.ui.error.setText('Connection' + ' ' + str(position_x) + ' ' + str(position_y))
         else:
-            self.ui.error.setText('Disconnection')
+            self.ui.error.setText('Disconnection' + ' ' + str(position_x) + ' ' + str(position_y))
+
 if __name__ == "__main__":
     app = QApplication(sys.argv)
     widget = MainWindow()

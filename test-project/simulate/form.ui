@@ -31,8 +31,8 @@
    <widget class="QLabel" name="map">
     <property name="geometry">
      <rect>
-      <x>35</x>
-      <y>25</y>
+      <x>0</x>
+      <y>0</y>
       <width>850</width>
       <height>650</height>
      </rect>
@@ -156,6 +156,9 @@
     <layout class="QVBoxLayout" name="verticalLayout_3">
      <item>
       <widget class="QLabel" name="error">
+       <property name="enabled">
+        <bool>false</bool>
+       </property>
        <property name="text">
         <string/>
        </property>
