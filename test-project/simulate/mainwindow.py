@@ -40,6 +40,8 @@ class MainWindow(QMainWindow):
         #spinbox signal-slot
         self.ui.speed_limiter.valueChanged.connect(self.get_speed)
 
+        self.dron_in_zone_connection()
+
         self.frame_update()
 
     def init_UI(self):
@@ -108,6 +110,20 @@ class MainWindow(QMainWindow):
         self.ui.camera.setPixmap(self.ui.map.pixmap().copy(int(self.ui.dron.pos().x()), int(self.ui.dron.pos().y()), 200, 200))
 
 
+    def dron_in_zone_connection(self):
+        position_x = self.ui.dron.pos().x()
+        position_y = self.ui.dron.pos().y()
+
+        start_connect_position_x = self.ui.radius_connection.pos().x()
+        end_connect_position_x = start_connect_position_x + self.ui.radius_connection.width()
+
+        start_connect_position_y = self.ui.radius_connection.pos().y()
+        end_connect_position_y = start_connect_position_y + self.ui.radius_connection.width()
+
+        if start_connect_position_x <= position_x <= end_connect_position_x and start_connect_position_y <= position_y <= end_connect_position_y:
+            self.ui.error.setText('Connection')
+        else:
+            self.ui.error.setText('Disconnection')
 if __name__ == "__main__":
     app = QApplication(sys.argv)
     widget = MainWindow()
