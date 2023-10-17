@@ -24,6 +24,7 @@ class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         if not MainWindow.objectName():
             MainWindow.setObjectName(u"MainWindow")
+        MainWindow.setEnabled(True)
         MainWindow.resize(1280, 720)
         MainWindow.setStyleSheet(u"#map{\n"
 "	background-color: red;\n"
@@ -35,7 +36,10 @@ class Ui_MainWindow(object):
 "\n"
 "#radius_connection{\n"
 "	background-color: rgba(249, 240, 107, 0.3);\n"
-"	border-radius: 100px;\n"
+"}\n"
+"\n"
+"#dron{\n"
+"		border: 1px solid blue;\n"
 "}")
         self.action_background = QAction(MainWindow)
         self.action_background.setObjectName(u"action_background")
@@ -104,6 +108,17 @@ class Ui_MainWindow(object):
 
         self.verticalLayout_3.addWidget(self.error)
 
+        self.radius_size = QSlider(self.centralwidget)
+        self.radius_size.setObjectName(u"radius_size")
+        self.radius_size.setGeometry(QRect(1030, 450, 136, 15))
+        self.radius_size.setMinimum(150)
+        self.radius_size.setMaximum(500)
+        self.radius_size.setOrientation(Qt.Horizontal)
+        self.radius_size.setInvertedAppearance(False)
+        self.radius_size.setInvertedControls(False)
+        self.size_zone = QLabel(self.centralwidget)
+        self.size_zone.setObjectName(u"size_zone")
+        self.size_zone.setGeometry(QRect(1030, 420, 136, 18))
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QMenuBar(MainWindow)
         self.menubar.setObjectName(u"menubar")
@@ -136,6 +151,7 @@ class Ui_MainWindow(object):
         self.pushButton.setText(QCoreApplication.translate("MainWindow", u"\u041e\u0431\u0440\u044b\u0432 \u0441\u0432\u044f\u0437\u0438", None))
         self.pushButton_2.setText(QCoreApplication.translate("MainWindow", u"\u0412\u043e\u0437\u0432\u0440\u0430\u0442", None))
         self.error.setText("")
+        self.size_zone.setText(QCoreApplication.translate("MainWindow", u"\u0420\u0430\u0437\u043c\u0435\u0440 \u0437\u043e\u043d\u044b", None))
         self.menuFile.setTitle(QCoreApplication.translate("MainWindow", u"File", None))
     # retranslateUi
 

@@ -18,11 +18,8 @@ class MainWindow(QMainWindow):
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
 
-#        self.position_x = randint(self.ui.dron.width(), self.ui.map.width() - self.ui.dron.width())
-#        self.position_y = randint(self.ui.dron.height(), self.ui.map.height() - self.ui.dron.height())
-
-        self.position_x = 100
-        self.position_y = 100
+        self.position_x = randint(self.ui.dron.width(), self.ui.map.width() - self.ui.dron.width())
+        self.position_y = randint(self.ui.dron.height(), self.ui.map.height() - self.ui.dron.height())
 
         #show ui-elements
         self.init_UI()
@@ -42,6 +39,7 @@ class MainWindow(QMainWindow):
         self.ui.action_exit.triggered.connect(self.close)
         #spinbox signal-slot
         self.ui.speed_limiter.valueChanged.connect(self.get_speed)
+        self.ui.radius_size.valueChanged.connect(self.get_zone_size)
 
         self.frame_update()
 
@@ -54,12 +52,7 @@ class MainWindow(QMainWindow):
 
     def spawn_objects(self, position_x, position_y):
         self.ui.dron.move(position_x - (0.5 * self.ui.dron.width()), position_y - (0.5 * self.ui.dron.height()))
-#        self.ui.radius_connection.move(self.ui.dron.pos().x(), self.ui.dron.pos().y())
-        print(position_x, position_y, self.ui.dron.pos().x(), self.ui.dron.pos().y())
         self.ui.radius_connection.move(position_x - (0.5 * self.ui.radius_connection.width()), position_y - (0.5 * self.ui.radius_connection.height()))
-        print(self.ui.radius_connection.pos().x(), self.ui.radius_connection.pos().y())
-#        self.ui.dron.move(position_x, position_y)
-#        self.ui.radius_connection.move(self.ui.dron.pos().x() - (0.25 * self.ui.radius_connection.width() ), self.ui.dron.pos().y() - (0.25 * self.ui.radius_connection.height()))
 
     def frame_update(self):
         #display update
@@ -79,7 +72,6 @@ class MainWindow(QMainWindow):
         if file_path:
             self.ui.map.setPixmap(QPixmap(file_path))
             self.update()
-
 
     def keyPressEvent(self, event):
         if event.key() == Qt.Key_W:
@@ -102,30 +94,32 @@ class MainWindow(QMainWindow):
             self.move_right = False
 
     def update_game(self):
-        if self.move_up:
+        if self.move_up and self.ui.dron.pos().y() > 0:
             self.ui.dron.move(self.ui.dron.pos() + QPoint(0, -self.speed))
-        if self.move_down:
+        if self.move_down and self.ui.dron.pos().y() + self.ui.dron.height() < self.ui.map.height():
             self.ui.dron.move(self.ui.dron.pos() + QPoint(0, self.speed))
-        if self.move_left:
+        if self.move_left and self.ui.dron.pos().x() > 0:
             self.ui.dron.move(self.ui.dron.pos() + QPoint(-self.speed, 0))
-        if self.move_right:
+        if self.move_right and self.ui.dron.pos().x() + self.ui.dron.width() < self.ui.map.width():
             self.ui.dron.move(self.ui.dron.pos() + QPoint(self.speed, 0))
 
         #camera's replay
         self.ui.camera.setPixmap(self.ui.map.pixmap().copy(int(self.ui.dron.pos().x()), int(self.ui.dron.pos().y()), 200, 200))
         self.dron_in_zone_connection()
 
-
+    def get_zone_size(self):
+        new_size = self.ui.radius_size.value()
+        self.ui.radius_connection.setFixedSize(new_size, new_size)
 
     def dron_in_zone_connection(self):
         position_x = self.ui.dron.pos().x()
         position_y = self.ui.dron.pos().y()
 
-        start_connect_position_x = self.ui.radius_connection.pos().x()
+        start_connect_position_x = self.ui.radius_connection.pos().x() - (0.5 * self.ui.dron.width())
         end_connect_position_x = start_connect_position_x + self.ui.radius_connection.width()
 
-        start_connect_position_y = self.ui.radius_connection.pos().y()
-        end_connect_position_y = start_connect_position_y + self.ui.radius_connection.width()
+        start_connect_position_y = self.ui.radius_connection.pos().y() - (0.5 * self.ui.dron.height())
+        end_connect_position_y = start_connect_position_y + self.ui.radius_connection.height()
 
         if start_connect_position_x <= position_x <= end_connect_position_x and start_connect_position_y <= position_y <= end_connect_position_y:
             self.ui.error.setText('Connection' + ' ' + str(position_x) + ' ' + str(position_y))
